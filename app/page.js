@@ -74,8 +74,8 @@ export default function Home() {
         </form>
       )}
 
-      <p style={{ marginTop: 20 }}>
-        After login you'll reach the dashboard where you can create, edit, and delete entries.
+      <p style={{ marginTop: 20 }}>{"After login you'll reach the dashboard where you can create, edit, and delete entries."}
+        
       </p>
     </main>
   );
