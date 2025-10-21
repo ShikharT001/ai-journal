@@ -18,6 +18,8 @@ export default function RootLayout({ children }) {
           fontFamily:
             '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif',
           minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <header
@@ -30,7 +32,9 @@ export default function RootLayout({ children }) {
         >
           <h2 style={{ margin: 0 }}>🧠 AI Journal</h2>
         </header>
-        <main style={{ padding: '24px' }}>{children}</main>
+
+        <main style={{ flex: 1, padding: '24px' }}>{children}</main>
+
         <footer
           style={{
             marginTop: '40px',
@@ -38,9 +42,34 @@ export default function RootLayout({ children }) {
             borderTop: '1px solid #ddd',
             textAlign: 'center',
             color: '#777',
+            backgroundColor: '#fff',
           }}
         >
-          <p>© {new Date().getFullYear()} AI Journal • Powered by Next.js & MongoDB</p>
+          <p style={{ margin: '4px 0' }}>
+            GitHub:{' '}
+            <a
+              href="https://github.com/shikharT001"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#0070f3', textDecoration: 'none' }}
+            >
+              ShikharT001
+            </a>
+          </p>
+          <p style={{ margin: '4px 0' }}>
+            LinkedIn:{' '}
+            <a
+              href="https://www.linkedin.com/in/shikhar-tiwari-b40803222/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#0070f3', textDecoration: 'none' }}
+            >
+              Shikhar Tiwari
+            </a>
+          </p>
+          <p style={{ marginTop: '10px', fontSize: '14px' }}>
+            © {new Date().getFullYear()} AI Journal • built by Shikhar Tiwari
+          </p>
         </footer>
       </body>
     </html>
