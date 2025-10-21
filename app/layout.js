@@ -67,7 +67,7 @@ export default function RootLayout({ children }) {
               Shikhar Tiwari
             </a>
           </p>
-          <p style={{ marginTop: '10px', fontSize: '14px' }}>{"© {new Date().getFullYear()} AI Journal • built by Shikhar Tiwari"}
+          <p style={{ marginTop: '10px', fontSize: '14px' }}>{"© AI Journal • built by Shikhar Tiwari"}
           </p>
         </footer>
       </body>
