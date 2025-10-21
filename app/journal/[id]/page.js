@@ -1,66 +1,129 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState } from "react";
 
-export default function EditPage() {
-  const params = useParams();
-  const id = params.id;
-  const router = useRouter();
-  const [entry, setEntry] = useState(null);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [mood, setMood] = useState('neutral');
+export default function Home() {
+  const [tab, setTab] = useState("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    async function load() {
-      const res = await fetch('/api/journal/' + id, { credentials: 'include' });
-      if (res.status === 401) return window.location.href = '/';
-      if (res.status === 404) return alert('Not found');
-      const data = await res.json();
-      setEntry(data);
-      setTitle(data.title || '');
-      setContent(data.content || '');
-      setMood(data.mood || 'neutral');
-    }
-    load();
-  }, [id]);
-
-  async function save(e) {
+  async function handleRegister(e) {
     e.preventDefault();
-    const res = await fetch('/api/journal/' + id, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content, mood }),
-      credentials: 'include'
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+      credentials: "include",
     });
-    if (res.status === 401) return window.location.href = '/';
-    if (res.ok) router.push('/dashboard');
-    else {
-      const data = await res.json().catch(()=>({}));
-      alert('Update failed: ' + (data?.error || res.statusText));
-    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return alert(data.error || "Registration failed");
+    alert("Registered! Please log in.");
+    setTab("login");
   }
 
-  if (!entry) return <div style={{ padding: 24 }}>Loading...</div>;
+  async function handleLogin(e) {
+    e.preventDefault();
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include",
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return alert(data.error || "Login failed");
+    window.location.href = "/dashboard";
+  }
 
   return (
-    <main style={{ padding: 24 }}>
-      <h2>Edit Entry</h2>
-      <form onSubmit={save}>
-        <div><input value={title} onChange={e=>setTitle(e.target.value)} /></div>
-        <div><textarea rows={8} value={content} onChange={e=>setContent(e.target.value)}></textarea></div>
-        <div>
-          <select value={mood} onChange={e=>setMood(e.target.value)}>
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="neutral">Neutral</option>
-            <option value="excited">Excited</option>
-            <option value="angry">Angry</option>
-          </select>
+    <main className="flex flex-col items-center justify-center min-h-[80vh]">
+      <div className="w-full max-w-md bg-white shadow-md rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-center text-indigo-600 mb-4">
+          Welcome to AI Journal
+        </h2>
+
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setTab("login")}
+            className={`px-4 py-2 rounded-l-md border ${
+              tab === "login"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setTab("register")}
+            className={`px-4 py-2 rounded-r-md border ${
+              tab === "register"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            Register
+          </button>
         </div>
-        <button type="submit">Save</button>
-        <button type="button" onClick={()=>router.push('/dashboard')} style={{ marginLeft: 8 }}>Cancel</button>
-      </form>
+
+        {tab === "register" ? (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+            >
+              Register
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+            >
+              Login
+            </button>
+          </form>
+        )}
+      </div>
     </main>
   );
 }
